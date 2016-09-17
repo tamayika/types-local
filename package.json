@@ -1,0 +1,20 @@
+{
+  "name": "types-local",
+  "version": "0.1.0",
+  "description": "TypeScript Definition Helper for not type-defined package in DefinitelyTyped to use easily",
+  "main": "index.js",
+  "dependencies": {
+    "dts-gen": "^0.4.16",
+    "npm": "^3.10.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamayika/types-local.git"
+  },
+  "author": "tamayika",
+  "license": "MIT"
+}
