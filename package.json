@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "TypeScript Definition Helper for not type-defined package in DefinitelyTyped to use easily",
   "main": "index.js",
+  "bin": {
+    "types-local": "./index.js"
+  },
   "dependencies": {
     "dts-gen": "^0.4.16",
     "npm": "^3.10.7"

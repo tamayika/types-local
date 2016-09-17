@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var npm = require('npm');
+var process = require('process');
 var dtsGen = require('dts-gen');
 
 function prepareDirectory() {
@@ -31,7 +32,12 @@ function writeDts() {
     fs.writeFileSync(path.join(typesLocalmoduleDirPath, 'index.d.ts'), result);
 }
 
-var moduleName = 'dts-gen';
+if (process.argv.length < 3) {
+    console.log("Usage: types-local <module-name>");
+    return;
+}
+
+var moduleName = process.argv[2];
 var _module = require(moduleName);
 var moduleVersion = '';
 var result = dtsGen.generateModuleDeclarationFile(moduleName, _module);
