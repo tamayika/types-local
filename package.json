@@ -1,6 +1,6 @@
 {
   "name": "types-local",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TypeScript Definition Helper for not type-defined package in DefinitelyTyped to use easily",
   "main": "index.js",
   "bin": {
