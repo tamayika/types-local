@@ -2,7 +2,8 @@
 
 var fs = require('fs');
 var path = require('path');
-var npm = require('npm');
+var requireg = require('requireg');
+var npm = requireg('npm');
 var process = require('process');
 var dtsGen = require('dts-gen');
 
