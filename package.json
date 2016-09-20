@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "dts-gen": "^0.4.16",
-    "requireg": "^0.1.6"
+    "requireg": "^0.1.6",
+    "yargs": "^5.0.0"
   },
   "devDependencies": {},
   "scripts": {

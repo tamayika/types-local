@@ -4,7 +4,6 @@ var fs = require('fs');
 var path = require('path');
 var requireg = require('requireg');
 var npm = requireg('npm');
-var process = require('process');
 var dtsGen = require('dts-gen');
 
 function prepareDirectory() {
@@ -28,6 +27,12 @@ function writePackageJson() {
         version: moduleVersion,
         description: 'TypeScript definitions for ' + moduleName + ' ' + moduleVersion,
     };
+    if (moduleDependencies) {
+        var dependencies = info["dependencies"] = {}
+        for (var moduleDependency of moduleDependencies) {
+            dependencies[`@types/${moduleDependency}`] = "*";
+        }
+    }
     fs.writeFileSync(jsonPath, JSON.stringify(info, null, 2));
 }
 
@@ -35,15 +40,26 @@ function writeDts() {
     fs.writeFileSync(path.join(typesLocalmoduleDirPath, 'index.d.ts'), result);
 }
 
-if (process.argv.length < 3) {
-    console.log("Usage: types-local <module-name>");
+
+var yargs = require('yargs')
+    .usage('Usage: $0 <module-name> [options]')
+    .alias('d', 'dependencies')
+    .describe('d', 'module dependencies')
+    .array('d')
+    .help('h')
+    .alias('h', 'help');
+var argv = yargs.argv;
+
+if (argv._.length == 0) {
+    yargs.showHelp();
     return;
 }
 
-var moduleName = process.argv[2];
+var moduleName = argv._[0];
 var _module = require(moduleName);
 var moduleVersion = '';
 var result = dtsGen.generateModuleDeclarationFile(moduleName, _module);
+var moduleDependencies = argv.d || [];
 
 var typesLocalDirName = 'types-local';
 var typesLocalmoduleDirPath = path.join(typesLocalDirName, moduleName);
