@@ -2,16 +2,28 @@
   "name": "types-local",
   "version": "0.1.2",
   "description": "TypeScript Definition Helper for not type-defined package in DefinitelyTyped to use easily",
-  "main": "index.js",
+  "main": "bin/lib/run.js",
   "bin": {
-    "types-local": "./index.js"
+    "types-local": "bin/lib/index.js"
   },
   "dependencies": {
     "dts-gen": "^0.4.16",
     "requireg": "^0.1.6",
     "yargs": "^5.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/dts-gen": "file:types-local/dts-gen",
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.45",
+    "@types/npm": "file:types-local/npm",
+    "@types/requireg": "file:types-local/requireg",
+    "@types/rimraf": "0.0.28",
+    "@types/yargs": "0.0.32",
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0",
+    "rimraf": "^2.5.4"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
