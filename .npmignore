@@ -1,0 +1,9 @@
+/lib
+/tests
+/tsconfig.json
+/tslint.json
+/.vscode
+/types-local
+/.npmignore
+/*.tgz
+/**/*.js.map
