@@ -2,9 +2,9 @@
   "name": "types-local",
   "version": "0.1.2",
   "description": "TypeScript Definition Helper for not type-defined package in DefinitelyTyped to use easily",
-  "main": "bin/lib/run.js",
+  "main": "bin/lib/index.js",
   "bin": {
-    "types-local": "bin/lib/index.js"
+    "types-local": "bin/lib/run.js"
   },
   "dependencies": {
     "dts-gen": "^0.4.16",
