@@ -1,0 +1,7 @@
+{
+  "name": "@types/requireg",
+  "typings": "index.d.ts",
+  "version": "0.1.6",
+  "description": "TypeScript definitions for requireg 0.1.6",
+  "dependencies": {}
+}

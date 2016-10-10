@@ -1,0 +1,6 @@
+{
+  "name": "@types/dts-gen",
+  "typings": "index.d.ts",
+  "version": "0.4.16",
+  "description": "TypeScript definitions for dts-gen 0.4.16"
+}
