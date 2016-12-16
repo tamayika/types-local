@@ -18,7 +18,7 @@
             },
             "console": "internalConsole",
             "sourceMaps": true,
-            "outDir": "${workspaceRoot}\\bin"
+            "outFiles": ["${workspaceRoot}\\bin\\**\\*.js"]
         },
         {
             "name": "Launch Mocha",
@@ -37,7 +37,7 @@
                 "NODE_ENV": "development"
             },
             "sourceMaps": true,
-            "outDir": "${workspaceRoot}\\bin"
+            "outFiles": ["${workspaceRoot}\\bin\\**\\*.js"]
         }
     ]
 }

@@ -26,8 +26,21 @@ This generates
        +-- index.d.ts (type definition)
 ```
 
+And update tsconfig.json
+
+```
+{
+    "compilerOptions": {
+        "baseUrl": ".", // if not exists
+        "paths": { // add module path
+            "${moduleName}": [
+                "types-local/${moduleName}"
+            ],
+        }
+    }
+}
+```
+
 # Options
 
-| shorthand | actual          | Description                                                                              |
-| --------- | --------------- | ---------------------------------------------------------------------------------------- |
-| -d        | --dependencies  | Creates @types dependencies in package.json (will install dependencies if not installed) |
+Currently no options provided.

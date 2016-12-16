@@ -6,6 +6,15 @@
         "lib": [
             "es6"
         ],
+        "baseUrl": ".",
+        "paths": {
+            "dts-gen": [
+                "types-local/dts-gen"
+            ],
+            "sort-keys": [
+                "types-local/sort-keys"
+            ]
+        },
         "sourceMap": true,
         "newLine": "LF",
         "outDir": "bin"
