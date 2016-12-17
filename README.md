@@ -9,7 +9,7 @@
 # Usage
 
 ```sh
-> npm install --save types-local
+> npm install -g types-local
 
 # install not type-defined package
 > npm install --save <module-name>
@@ -44,3 +44,9 @@ And update tsconfig.json
 # Options
 
 Currently no options provided.
+
+# Module Resolution
+
+Currently find `node_modules` directory from current directory to root directory.
+If `node_modules/${moduleName}/package.json` is found, requires `node_modules/${moduleName}`.
+If not found, `require(${moduleName})` calls.

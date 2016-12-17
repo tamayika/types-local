@@ -17,7 +17,7 @@ function prepareDirectory(typesLocalDirName: string, typesLocalmoduleDirPath: st
     }
 }
 
-function getModuleVersion(moduleName: string) {
+function getNodeModuleDir(moduleName: string) {
     let dir = path.normalize(process.cwd());
     while (true) {
         try {
@@ -27,10 +27,7 @@ function getModuleVersion(moduleName: string) {
             fs.statSync(moduleDir);
             const packageJsonPath = path.join(moduleDir, "package.json");
             fs.statSync(packageJsonPath);
-            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-            if (packageJson.version) {
-                return packageJson.version;
-            }
+            return { nodeModulesDir, moduleDir, packageJsonPath };
         } catch (e) {
             if (process.env.debug) {
                 console.error(e);
@@ -40,6 +37,23 @@ function getModuleVersion(moduleName: string) {
         dir = path.normalize(path.join(dir, ".."));
         if (prevDir === dir) {
             break;
+        }
+    }
+}
+
+function requireModule(moduleName: string) {
+    const nodeModuleDir = getNodeModuleDir(moduleName);
+    if (nodeModuleDir) {
+        return require(nodeModuleDir.moduleDir);
+    }
+}
+
+function getModuleVersion(moduleName: string) {
+    const nodeModuleDir = getNodeModuleDir(moduleName);
+    if (nodeModuleDir) {
+        const packageJson = JSON.parse(fs.readFileSync(nodeModuleDir.packageJsonPath).toString());
+        if (packageJson.version) {
+            return packageJson.version;
         }
     }
     return "";
@@ -84,7 +98,7 @@ function updateTsConfigJson(moduleName: string) {
 
 export function createTypesLocalPackage(
     moduleName: string, callback?: () => void) {
-    const module = require(moduleName);
+    const module = requireModule(moduleName) || require(moduleName);
     const result = dtsGen.generateModuleDeclarationFile(moduleName, module);
 
     const typesLocalDirName = "types-local";
