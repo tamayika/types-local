@@ -43,7 +43,10 @@ And update tsconfig.json
 
 # Options
 
-Currently no options provided.
+|shorthand |full     |description |
+|----------|---------|------------|
+|-v        |--version|Show version|
+|-h        |--help   |Show help   |
 
 # Module Resolution
 
