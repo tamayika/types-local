@@ -2,18 +2,43 @@ import * as detectIndent from "detect-indent";
 import * as dtsGen from "dts-gen";
 import * as fs from "fs";
 import * as path from "path";
+import * as rimraf from "rimraf";
 import * as sortKeys from "sort-keys";
 
-function prepareDirectory(typesLocalDirName: string, typesLocalmoduleDirPath: string) {
-    try {
-        fs.statSync(typesLocalDirName);
-    } catch (e) {
+function dump(message) {
+    if (process.env.NODE_ENV === "test") {
+        // tslint:disable-next-line:no-console
+        console.log(`[Dump] ${message}`);
+    }
+}
+
+function info(message) {
+    // tslint:disable-next-line:no-console
+    console.log(`[Info] ${message}`);
+}
+
+function warn(message) {
+    console.warn(message);
+}
+
+function prepareDirectory(typesLocalDirName: string, typesLocalModuleDirPath: string) {
+    if (!fs.existsSync(typesLocalDirName)) {
         fs.mkdirSync(typesLocalDirName);
     }
+    if (!fs.existsSync(typesLocalModuleDirPath)) {
+        fs.mkdirSync(typesLocalModuleDirPath);
+    }
+}
+
+function removeDirectory(typesLocalDirName: string, typesLocalModuleDirPath: string) {
+    if (fs.existsSync(typesLocalModuleDirPath)) {
+        rimraf.sync(typesLocalModuleDirPath);
+    }
     try {
-        fs.statSync(typesLocalmoduleDirPath);
+        fs.rmdirSync(typesLocalDirName);
+        info("types-local dir removed successfully.");
     } catch (e) {
-        fs.mkdirSync(typesLocalmoduleDirPath);
+        dump(`${typesLocalDirName} is not empty.`);
     }
 }
 
@@ -61,8 +86,8 @@ function getModuleVersion(moduleName: string) {
 
 function writePackageJson(
     moduleName: string, moduleVersion: string,
-    typesLocalmoduleDirPath: string) {
-    const jsonPath = path.join(typesLocalmoduleDirPath, "package.json");
+    typesLocalModuleDirPath: string) {
+    const jsonPath = path.join(typesLocalModuleDirPath, "package.json");
     const info = {
         dependencies: {},
         description: "TypeScript definitions for " + moduleName + " " + moduleVersion,
@@ -73,43 +98,63 @@ function writePackageJson(
     fs.writeFileSync(jsonPath, JSON.stringify(info, null, 2));
 }
 
-function writeDts(typesLocalmoduleDirPath: string, result: string) {
-    fs.writeFileSync(path.join(typesLocalmoduleDirPath, "index.d.ts"), result);
+function writeDts(typesLocalModuleDirPath: string, result: string) {
+    fs.writeFileSync(path.join(typesLocalModuleDirPath, "index.d.ts"), result);
 }
 
-function updateTsConfigJson(moduleName: string) {
+function updateTsConfigJson(callback: (paths: any) => any) {
     const path = "tsconfig.json";
     if (!fs.existsSync(path)) {
+        warn("tsconfig.json does not exist.");
         return;
     }
-
-    // add baseUrl=.
-    // add paths[${moduleName}]=[types-local/${moduleName}]
     const jsonContent = fs.readFileSync(path).toString();
     const indentAmount = detectIndent(jsonContent).amount || 4;
     const tsConfig = JSON.parse(jsonContent);
     const compilerOptions = tsConfig.compilerOptions = tsConfig.compilerOptions || {};
     const baseUrl = compilerOptions.baseUrl = compilerOptions.baseUrl || ".";
     const paths = compilerOptions.paths = compilerOptions.paths || {};
-    paths[moduleName] = [`types-local/${moduleName}`];
+    callback(paths);
+    if (!paths || Object.keys(paths).length === 0) {
+        delete compilerOptions.baseUrl;
+        delete compilerOptions.paths;
+    }
     sortKeys(tsConfig, { deep: true });
     fs.writeFileSync(path, JSON.stringify(tsConfig, null, indentAmount));
 }
 
-export function createTypesLocalPackage(
-    moduleName: string, callback?: () => void) {
+function addModuleToTsConfigJson(moduleName: string) {
+    // add baseUrl=.
+    // add paths[${moduleName}]=[types-local/${moduleName}]
+    updateTsConfigJson((paths) => {
+        paths[moduleName] = [`types-local/${moduleName}`];
+    });
+}
+
+function removeModuleFromTsConfigJson(moduleName: string) {
+    // remove paths[${moduleName}]=[types-local/${moduleName}]
+    updateTsConfigJson((paths) => {
+        delete paths[moduleName];
+    });
+}
+
+export function createTypesLocalPackage(moduleName: string) {
     const module = requireModule(moduleName) || require(moduleName);
     const result = dtsGen.generateModuleDeclarationFile(moduleName, module);
 
     const typesLocalDirName = "types-local";
-    const typesLocalmoduleDirPath = path.join(typesLocalDirName, moduleName);
+    const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
 
     const moduleVersion = getModuleVersion(moduleName);
-    prepareDirectory(typesLocalDirName, typesLocalmoduleDirPath);
-    writePackageJson(moduleName, moduleVersion, typesLocalmoduleDirPath);
-    writeDts(typesLocalmoduleDirPath, result);
-    updateTsConfigJson(moduleName);
-    if (callback) {
-        callback();
-    }
+    prepareDirectory(typesLocalDirName, typesLocalModuleDirPath);
+    writePackageJson(moduleName, moduleVersion, typesLocalModuleDirPath);
+    writeDts(typesLocalModuleDirPath, result);
+    addModuleToTsConfigJson(moduleName);
+}
+
+export function removeTypesLocalPackage(moduleName: string) {
+    const typesLocalDirName = "types-local";
+    const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
+    removeDirectory(typesLocalDirName, typesLocalModuleDirPath);
+    removeModuleFromTsConfigJson(moduleName);
 }

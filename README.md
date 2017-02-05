@@ -13,7 +13,7 @@
 
 # install not type-defined package
 > npm install --save <module-name>
-> types-local <module-name>
+> types-local install <module-name>
 ```
 
 This generates
@@ -41,12 +41,19 @@ And update tsconfig.json
 }
 ```
 
+```sh
+# if you want to uninstall definition
+> types-local uninstall <module-name>
+```
+
+will remove `types-local/<module-name>` and update `tsconfig.json`.
+
 # Options
 
-|shorthand |full     |description |
-|----------|---------|------------|
-|-v        |--version|Show version|
-|-h        |--help   |Show help   |
+|shorthand |full       |description         |
+|----------|-----------|--------------------|
+|-v        |--version  |Show version        |
+|-h        |--help     |Show help           |
 
 # Module Resolution
 

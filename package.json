@@ -9,6 +9,7 @@
   "dependencies": {
     "detect-indent": "^5.0.0",
     "dts-gen": "^0.4.16",
+    "rimraf": "^2.5.4",
     "sort-keys": "^1.1.2",
     "yargs": "^5.0.0"
   },
@@ -20,7 +21,6 @@
     "@types/yargs": "0.0.32",
     "chai": "^3.5.0",
     "mocha": "^3.1.0",
-    "rimraf": "^2.5.4",
     "tslint": "^4.1.0",
     "typescript": "^2.1.4"
   },

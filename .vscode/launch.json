@@ -23,11 +23,12 @@
         {
             "name": "Launch Mocha",
             "type": "node",
-            "program": "${workspaceRoot}\\node_modules\\mocha\\bin\\_mocha",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "args": [
                 "--no-timeouts",
                 "--colors",
-                "bin\\tests"
+                "bin/tests"
             ],
             "stopOnEntry": false,
             "cwd": "${workspaceRoot}",
@@ -37,7 +38,7 @@
                 "NODE_ENV": "development"
             },
             "sourceMaps": true,
-            "outFiles": ["${workspaceRoot}\\bin\\**\\*.js"]
+            "outFiles": ["${workspaceRoot}/bin/**/*.js"]
         }
     ]
 }
