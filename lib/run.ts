@@ -30,7 +30,7 @@ function main() {
             }
             switch (command) {
                 case "init":
-                    if (setting.defaultLoaded) {
+                    if (!setting.defaultLoaded) {
                         logger.error(`${Setting.FilePath} already exists.`);
                     } else {
                         setting.save();
