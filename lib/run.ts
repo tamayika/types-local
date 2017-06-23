@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as yargs from "yargs";
 import * as TypesLocal from "./index";
+import * as logger from "./logger";
 
 function main() {
     const args = yargs
@@ -29,7 +30,7 @@ function main() {
             } else if ("uninstall".indexOf(command) === 0) {
                 TypesLocal.removeTypesLocalPackage(argv._[1]);
             } else {
-                console.warn(`${argv._[0]} is not supported command.`);
+                logger.warn(`${argv._[0]} is not supported command.`);
             }
             break;
         default:
