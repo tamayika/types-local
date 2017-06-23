@@ -6,6 +6,7 @@ import * as path from "path";
 import * as rimraf from "rimraf";
 import * as sortKeys from "sort-keys";
 import * as logger from "./logger";
+import { Setting } from "./setting";
 
 function prepareDirectory(typesLocalDirName: string, typesLocalModuleDirPath: string) {
     if (!fs.existsSync(typesLocalDirName)) {
@@ -22,7 +23,7 @@ function removeDirectory(typesLocalDirName: string, typesLocalModuleDirPath: str
     }
     try {
         fs.rmdirSync(typesLocalDirName);
-        logger.info("types-local dir removed successfully.");
+        logger.info(`${typesLocalDirName} dir removed successfully.`);
     } catch (e) {
         logger.dump(`${typesLocalDirName} is not empty.`);
     }
@@ -109,11 +110,11 @@ function updateTsConfigJson(callback: (paths: any) => any) {
     fs.writeFileSync(path, JSON.stringify(tsConfig, null, indentAmount));
 }
 
-function addModuleToTsConfigJson(moduleName: string) {
+function addModuleToTsConfigJson(moduleName: string, typesLocalDirName: string) {
     // add baseUrl=.
-    // add paths[${moduleName}]=[types-local/${moduleName}]
+    // add paths[${moduleName}]=[typesLocalDirName/${moduleName}]
     updateTsConfigJson((paths) => {
-        paths[moduleName] = [`types-local/${moduleName}`];
+        paths[moduleName] = [`${typesLocalDirName}/${moduleName}`];
     });
 }
 
@@ -124,19 +125,18 @@ function removeModuleFromTsConfigJson(moduleName: string) {
     });
 }
 
-export function createTypesLocalPackage(moduleName: string) {
+export function createTypesLocalPackage(moduleName: string, setting: Setting) {
     try {
         const module = requireModule(moduleName) || require(moduleName);
         const result = dtsGen.generateModuleDeclarationFile(moduleName, module);
 
-        const typesLocalDirName = "types-local";
-        const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
+        const typesLocalModuleDirPath = path.join(setting.installDir, moduleName);
 
         const moduleVersion = getModuleVersion(moduleName);
-        prepareDirectory(typesLocalDirName, typesLocalModuleDirPath);
+        prepareDirectory(setting.installDir, typesLocalModuleDirPath);
         writePackageJson(moduleName, moduleVersion, typesLocalModuleDirPath);
         writeDts(typesLocalModuleDirPath, result);
-        addModuleToTsConfigJson(moduleName);
+        addModuleToTsConfigJson(moduleName, setting.installDir);
         logger.info(`${moduleName} installed.`);
     } catch (e) {
         logger.error(`${moduleName} installation failed.`);
@@ -144,17 +144,16 @@ export function createTypesLocalPackage(moduleName: string) {
     }
 }
 
-export function createTypesLocalPackages(moduleNames: string[]) {
+export function createTypesLocalPackages(moduleNames: string[], setting: Setting) {
     for (const moduleName of moduleNames) {
-        createTypesLocalPackage(moduleName);
+        createTypesLocalPackage(moduleName, setting);
     }
 }
 
-export function removeTypesLocalPackage(moduleName: string) {
+export function removeTypesLocalPackage(moduleName: string, setting: Setting) {
     try {
-        const typesLocalDirName = "types-local";
-        const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
-        removeDirectory(typesLocalDirName, typesLocalModuleDirPath);
+        const typesLocalModuleDirPath = path.join(setting.installDir, moduleName);
+        removeDirectory(setting.installDir, typesLocalModuleDirPath);
         removeModuleFromTsConfigJson(moduleName);
         logger.info(`${moduleName} uninstalled.`);
     } catch (e) {
@@ -163,8 +162,8 @@ export function removeTypesLocalPackage(moduleName: string) {
     }
 }
 
-export function removeTypesLocalPackages(moduleNames: string[]) {
+export function removeTypesLocalPackages(moduleNames: string[], setting: Setting) {
     for (const moduleName of moduleNames) {
-        removeTypesLocalPackage(moduleName);
+        removeTypesLocalPackage(moduleName, setting);
     }
 }
