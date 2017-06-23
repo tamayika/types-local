@@ -125,24 +125,46 @@ function removeModuleFromTsConfigJson(moduleName: string) {
 }
 
 export function createTypesLocalPackage(moduleName: string) {
-    const module = requireModule(moduleName) || require(moduleName);
-    const result = dtsGen.generateModuleDeclarationFile(moduleName, module);
+    try {
+        const module = requireModule(moduleName) || require(moduleName);
+        const result = dtsGen.generateModuleDeclarationFile(moduleName, module);
 
-    const typesLocalDirName = "types-local";
-    const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
+        const typesLocalDirName = "types-local";
+        const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
 
-    const moduleVersion = getModuleVersion(moduleName);
-    prepareDirectory(typesLocalDirName, typesLocalModuleDirPath);
-    writePackageJson(moduleName, moduleVersion, typesLocalModuleDirPath);
-    writeDts(typesLocalModuleDirPath, result);
-    addModuleToTsConfigJson(moduleName);
-    logger.info(`${moduleName} installed.`);
+        const moduleVersion = getModuleVersion(moduleName);
+        prepareDirectory(typesLocalDirName, typesLocalModuleDirPath);
+        writePackageJson(moduleName, moduleVersion, typesLocalModuleDirPath);
+        writeDts(typesLocalModuleDirPath, result);
+        addModuleToTsConfigJson(moduleName);
+        logger.info(`${moduleName} installed.`);
+    } catch (e) {
+        logger.error(`${moduleName} installation failed.`);
+        logger.error(e);
+    }
+}
+
+export function createTypesLocalPackages(moduleNames: string[]) {
+    for (const moduleName of moduleNames) {
+        createTypesLocalPackage(moduleName);
+    }
 }
 
 export function removeTypesLocalPackage(moduleName: string) {
-    const typesLocalDirName = "types-local";
-    const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
-    removeDirectory(typesLocalDirName, typesLocalModuleDirPath);
-    removeModuleFromTsConfigJson(moduleName);
-    logger.info(`${moduleName} uninstalled.`);
+    try {
+        const typesLocalDirName = "types-local";
+        const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
+        removeDirectory(typesLocalDirName, typesLocalModuleDirPath);
+        removeModuleFromTsConfigJson(moduleName);
+        logger.info(`${moduleName} uninstalled.`);
+    } catch (e) {
+        logger.error(`${moduleName} uninstallation failed.`);
+        logger.error(e);
+    }
+}
+
+export function removeTypesLocalPackages(moduleNames: string[]) {
+    for (const moduleName of moduleNames) {
+        removeTypesLocalPackage(moduleName);
+    }
 }

@@ -13,8 +13,8 @@
 > npm install -g types-local
 
 # install not type-defined package
-> npm install --save <module-name>
-> types-local install <module-name>
+> npm install --save <module-name>, <module-name2>, ...
+> types-local install <module-name>, <module-name2>, ...
 ```
 
 This generates
@@ -25,11 +25,15 @@ This generates
    +-- <module-name>
        +-- package.json
        +-- index.d.ts (type definition)
+   +-- <module-name2>
+       +-- package.json
+       +-- index.d.ts (type definition)
+   ...
 ```
 
 And update tsconfig.json
 
-```
+```json
 {
     "compilerOptions": {
         "baseUrl": ".", // if not exists
@@ -37,6 +41,10 @@ And update tsconfig.json
             "${moduleName}": [
                 "types-local/${moduleName}"
             ],
+            "${moduleName2}": [
+                "types-local/${moduleName2}"
+            ],
+            ...
         }
     }
 }
@@ -44,10 +52,10 @@ And update tsconfig.json
 
 ```sh
 # if you want to uninstall definition
-> types-local uninstall <module-name>
+> types-local uninstall <module-name>, <module-name2>, ...
 ```
 
-will remove `types-local/<module-name>` and update `tsconfig.json`.
+will remove `types-local/<module-name>`, `types-local/<module-name2>`, ... and update `tsconfig.json`.
 
 # Options
 

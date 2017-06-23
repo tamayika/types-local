@@ -23,17 +23,15 @@ function main() {
         case 1:
             TypesLocal.createTypesLocalPackage(argv._[0]);
             break;
-        case 2:
+        default:
             const command: string = argv._[0];
             if ("install".indexOf(command) === 0) {
-                TypesLocal.createTypesLocalPackage(argv._[1]);
+                TypesLocal.createTypesLocalPackages(argv._.slice(1));
             } else if ("uninstall".indexOf(command) === 0) {
-                TypesLocal.removeTypesLocalPackage(argv._[1]);
+                TypesLocal.removeTypesLocalPackages(argv._.slice(1));
             } else {
                 logger.warn(`${argv._[0]} is not supported command.`);
             }
-            break;
-        default:
             break;
     }
 }
