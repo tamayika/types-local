@@ -2,11 +2,12 @@ import * as fs from "fs";
 import * as logger from "./logger";
 
 export class Setting {
-    private static FilePath = "types-local.json";
-    private static InstallDir = "types-local";
+    public static FilePath = "types-local.json";
+    public static InstallDir = "types-local";
 
     public installDir = Setting.InstallDir;
     public initializeFailed = false;
+    public defaultLoaded = false;
 
     public constructor() {
         if (fs.existsSync(Setting.FilePath)) {
@@ -23,6 +24,8 @@ export class Setting {
             if (this.installDir.match(/\/$/)) {
                 this.installDir = this.installDir.substring(0, this.installDir.length - 1);
             }
+        } else {
+            this.defaultLoaded = true;
         }
     }
 

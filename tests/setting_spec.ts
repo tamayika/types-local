@@ -19,14 +19,14 @@ describe("Setting", () => {
         it("not exist setting", () => {
             withTempDir(() => {
                 const setting = new Setting();
-                expect(setting.installDir).to.eq("types-local");
+                expect(setting.installDir).to.eq(Setting.InstallDir);
                 expect(setting.initializeFailed).to.eq(false);
             });
         });
 
         it("correct setting", () => {
             withTempDir(() => {
-                fs.writeFileSync("types-local.json", `{
+                fs.writeFileSync(Setting.FilePath, `{
                     "installDir": "lib/types"
                 }`);
                 const setting = new Setting();
@@ -37,22 +37,22 @@ describe("Setting", () => {
 
         it("incorrect type setting", () => {
             withTempDir(() => {
-                fs.writeFileSync("types-local.json", `{
+                fs.writeFileSync(Setting.FilePath, `{
                     "installDir": 1
                 }`);
                 const setting = new Setting();
-                expect(setting.installDir).to.eq("types-local");
+                expect(setting.installDir).to.eq(Setting.InstallDir);
                 expect(setting.initializeFailed).to.eq(false);
             });
         });
 
         it("invalid json setting", () => {
             withTempDir(() => {
-                fs.writeFileSync("types-local.json", `{
+                fs.writeFileSync(Setting.FilePath, `{
                     "installDir: "lib/types"
                 }`);
                 const setting = new Setting();
-                expect(setting.installDir).to.eq("types-local");
+                expect(setting.installDir).to.eq(Setting.InstallDir);
                 expect(setting.initializeFailed).to.eq(true);
             });
         });
@@ -62,7 +62,7 @@ describe("Setting", () => {
         withTempDir(() => {
             const setting = new Setting();
             setting.save();
-            expect(fs.readFileSync("types-local.json"), `{
+            expect(fs.readFileSync(Setting.FilePath), `{
     "installDir": "types-local"
 }`);
         });

@@ -10,6 +10,7 @@ import { Setting } from "./setting";
 function main() {
     const args = yargs
         .usage("Usage: types-local <command> <module-name> [options]")
+        .command("init", "initialize types-local.json")
         .command("install", "install types-local directory and package")
         .command("uninstall", "uninstall types-local directory and package")
         .help("h")
@@ -21,17 +22,30 @@ function main() {
         case 0:
             args.showHelp();
             return;
-        case 1:
-            TypesLocal.createTypesLocalPackage(argv._[0], new Setting());
-            break;
         default:
             const command: string = argv._[0];
-            if ("install".indexOf(command) === 0) {
-                TypesLocal.createTypesLocalPackages(argv._.slice(1), new Setting());
-            } else if ("uninstall".indexOf(command) === 0) {
-                TypesLocal.removeTypesLocalPackages(argv._.slice(1), new Setting());
-            } else {
-                logger.warn(`${argv._[0]} is not supported command.`);
+            const setting = new Setting();
+            if (setting.initializeFailed) {
+                return;
+            }
+            switch (command) {
+                case "init":
+                    if (setting.defaultLoaded) {
+                        logger.error(`${Setting.FilePath} already exists.`);
+                    } else {
+                        setting.save();
+                        logger.info(`${Setting.FilePath} created.`);
+                    }
+                    break;
+                default:
+                    if ("install".indexOf(command) === 0) {
+                        TypesLocal.createTypesLocalPackages(argv._.slice(1), setting);
+                    } else if ("uninstall".indexOf(command) === 0) {
+                        TypesLocal.removeTypesLocalPackages(argv._.slice(1), setting);
+                    } else {
+                        logger.error(`${argv._[0]} is not supported command.`);
+                    }
+                    break;
             }
             break;
     }
