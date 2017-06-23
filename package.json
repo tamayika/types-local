@@ -7,7 +7,6 @@
     "types-local": "bin/lib/run.js"
   },
   "dependencies": {
-    "@types/mkdirp": "^0.3.29",
     "detect-indent": "^5.0.0",
     "dts-gen": "^0.5.6",
     "mkdirp": "^0.5.1",
@@ -17,6 +16,7 @@
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
+    "@types/mkdirp": "^0.3.29",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.45",
     "@types/rimraf": "0.0.28",

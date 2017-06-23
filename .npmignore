@@ -7,3 +7,4 @@
 /.npmignore
 /*.tgz
 /**/*.js.map
+/circle.yml
