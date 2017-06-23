@@ -136,6 +136,7 @@ export function createTypesLocalPackage(moduleName: string) {
     writePackageJson(moduleName, moduleVersion, typesLocalModuleDirPath);
     writeDts(typesLocalModuleDirPath, result);
     addModuleToTsConfigJson(moduleName);
+    logger.info(`${moduleName} installed.`);
 }
 
 export function removeTypesLocalPackage(moduleName: string) {
@@ -143,4 +144,5 @@ export function removeTypesLocalPackage(moduleName: string) {
     const typesLocalModuleDirPath = path.join(typesLocalDirName, moduleName);
     removeDirectory(typesLocalDirName, typesLocalModuleDirPath);
     removeModuleFromTsConfigJson(moduleName);
+    logger.info(`${moduleName} uninstalled.`);
 }
