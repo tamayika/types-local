@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/types-local.svg)](https://badge.fury.io/js/types-local)
+[![CircleCI](https://circleci.com/gh/tamayika/types-local.svg?style=svg)](https://circleci.com/gh/tamayika/types-local)
 
 # types-local: A TypeScript Definition Helper for not type-defined package in DefinitelyTyped to use easily
 
