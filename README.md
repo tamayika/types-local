@@ -68,8 +68,8 @@ will remove `types-local/<module-name>`, `types-local/<module-name2>`, ... and u
 
 `types-local.json` allows you to customize types-local behavior.
 
-```
-types-local init
+```sh
+> types-local init
 ```
 
 creates `types-local.json` with default setting.
