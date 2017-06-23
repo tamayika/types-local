@@ -1,6 +1,7 @@
 import * as detectIndent from "detect-indent";
 import * as dtsGen from "dts-gen";
 import * as fs from "fs";
+import * as mkdirp from "mkdirp";
 import * as path from "path";
 import * as rimraf from "rimraf";
 import * as sortKeys from "sort-keys";
@@ -8,10 +9,10 @@ import * as logger from "./logger";
 
 function prepareDirectory(typesLocalDirName: string, typesLocalModuleDirPath: string) {
     if (!fs.existsSync(typesLocalDirName)) {
-        fs.mkdirSync(typesLocalDirName);
+        mkdirp.sync(typesLocalDirName);
     }
     if (!fs.existsSync(typesLocalModuleDirPath)) {
-        fs.mkdirSync(typesLocalModuleDirPath);
+        mkdirp.sync(typesLocalModuleDirPath);
     }
 }
 

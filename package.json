@@ -7,8 +7,10 @@
     "types-local": "bin/lib/run.js"
   },
   "dependencies": {
+    "@types/mkdirp": "^0.3.29",
     "detect-indent": "^5.0.0",
     "dts-gen": "^0.5.6",
+    "mkdirp": "^0.5.1",
     "rimraf": "^2.5.4",
     "sort-keys": "^1.1.2",
     "yargs": "^5.0.0"
@@ -25,8 +27,8 @@
     "typescript": "^2.3.4"
   },
   "scripts": {
-    "test": "tsc && mocha --no-timeouts --colors bin/tests",
-    "lint": "tslint -c tslint.json lib/**/*.ts"
+    "test": "tsc && npm install @request/headers && mocha --no-timeouts --colors bin/tests",
+    "lint": "tslint -c tslint.json lib/**/*.ts tests/**/*.ts"
   },
   "repository": {
     "type": "git",

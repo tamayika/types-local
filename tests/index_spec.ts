@@ -19,7 +19,7 @@ describe("TypesLocal", () => {
         const tempDir = createTempDir();
         process.chdir(tempDir);
         fs.writeFileSync("tsconfig.json", "{}");
-        TypesLocal.createTypesLocalPackage("mkdirp");
+        TypesLocal.createTypesLocalPackage(packageName);
         done();
         rimraf.sync(tempDir);
     }
@@ -27,13 +27,13 @@ describe("TypesLocal", () => {
     it("createTypesLocalPackage", (done) => {
         install("mkdirp", () => {
             const dir = (path.join("types-local", "mkdirp"));
-            expect(fs.existsSync(dir)).to.be.true;
+            expect(fs.existsSync(dir)).to.eq(true);
             expect(fs.existsSync(path.join(dir, "index.d.ts")));
             const packageJson = JSON.parse(fs.readFileSync(path.join(dir, "package.json")).toString());
             expect(packageJson.name).to.eq("@types/mkdirp");
             expect(packageJson.typings).to.eq("index.d.ts");
-            expect(packageJson.version).to.not.undefined;
-            expect(packageJson.description).to.not.undefined;
+            expect(packageJson.version).to.not.eq(undefined);
+            expect(packageJson.description).to.not.eq(undefined);
             const tsConfigJson = fs.readFileSync("tsconfig.json").toString();
             expect(tsConfigJson).to.eq(`{
     "compilerOptions": {
@@ -46,9 +46,38 @@ describe("TypesLocal", () => {
     }
 }`);
             const tsConfig = JSON.parse(tsConfigJson);
-            expect(tsConfig.compilerOptions.baseUrl).to.not.undefined;
-            expect(tsConfig.compilerOptions.paths).to.not.undefined;
+            expect(tsConfig.compilerOptions.baseUrl).to.not.eq(undefined);
+            expect(tsConfig.compilerOptions.paths).to.not.eq(undefined);
             expect(tsConfig.compilerOptions.paths.mkdirp).to.eql(["types-local/mkdirp"]);
+        });
+        done();
+    });
+
+    it("createTypesLocalPackage with scoped package", (done) => {
+        install("@request/headers", () => {
+            const dir = (path.join("types-local", "@request", "headers"));
+            expect(fs.existsSync(dir)).to.eq(true);
+            expect(fs.existsSync(path.join(dir, "index.d.ts")));
+            const packageJson = JSON.parse(fs.readFileSync(path.join(dir, "package.json")).toString());
+            expect(packageJson.name).to.eq("@types/@request/headers");
+            expect(packageJson.typings).to.eq("index.d.ts");
+            expect(packageJson.version).to.not.eq(undefined);
+            expect(packageJson.description).to.not.eq(undefined);
+            const tsConfigJson = fs.readFileSync("tsconfig.json").toString();
+            expect(tsConfigJson).to.eq(`{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@request/headers": [
+                "types-local/@request/headers"
+            ]
+        }
+    }
+}`);
+            const tsConfig = JSON.parse(tsConfigJson);
+            expect(tsConfig.compilerOptions.baseUrl).to.not.eq(undefined);
+            expect(tsConfig.compilerOptions.paths).to.not.eq(undefined);
+            expect(tsConfig.compilerOptions.paths["@request/headers"]).to.eql(["types-local/@request/headers"]);
         });
         done();
     });
@@ -57,8 +86,8 @@ describe("TypesLocal", () => {
         install("mkdirp", () => {
             TypesLocal.removeTypesLocalPackage("mkdirp");
             const dir = (path.join("types-local", "mkdirp"));
-            expect(fs.existsSync(dir)).to.be.false;
-            expect(fs.existsSync("types-local")).to.be.false;
+            expect(fs.existsSync(dir)).to.be.eq(false);
+            expect(fs.existsSync("types-local")).to.be.eq(false);
             const tsConfigJson = fs.readFileSync("tsconfig.json").toString();
             expect(tsConfigJson).to.eq(`{
     "compilerOptions": {}
