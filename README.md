@@ -57,12 +57,28 @@ And update tsconfig.json
 
 will remove `types-local/<module-name>`, `types-local/<module-name2>`, ... and update `tsconfig.json`.
 
-# Options
+# Command Options
 
 |shorthand |full       |description         |
 |----------|-----------|--------------------|
 |-v        |--version  |Show version        |
 |-h        |--help     |Show help           |
+
+# types-local.json
+
+`types-local.json` allows you to customize types-local behavior.
+
+```
+types-local init
+```
+
+creates `types-local.json` with default setting.
+
+## Options
+
+|name      |type       |default    |description                        |
+|----------|-----------|-----------|-----------------------------------|
+|installDir|string     |types-local|types definition location directory|
 
 # Module Resolution
 
