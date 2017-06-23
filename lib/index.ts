@@ -4,22 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as rimraf from "rimraf";
 import * as sortKeys from "sort-keys";
-
-function dump(message) {
-    if (process.env.NODE_ENV === "test") {
-        // tslint:disable-next-line:no-console
-        console.log(`[Dump] ${message}`);
-    }
-}
-
-function info(message) {
-    // tslint:disable-next-line:no-console
-    console.log(`[Info] ${message}`);
-}
-
-function warn(message) {
-    console.warn(message);
-}
+import * as logger from "./logger";
 
 function prepareDirectory(typesLocalDirName: string, typesLocalModuleDirPath: string) {
     if (!fs.existsSync(typesLocalDirName)) {
@@ -36,9 +21,9 @@ function removeDirectory(typesLocalDirName: string, typesLocalModuleDirPath: str
     }
     try {
         fs.rmdirSync(typesLocalDirName);
-        info("types-local dir removed successfully.");
+        logger.info("types-local dir removed successfully.");
     } catch (e) {
-        dump(`${typesLocalDirName} is not empty.`);
+        logger.dump(`${typesLocalDirName} is not empty.`);
     }
 }
 
@@ -55,7 +40,7 @@ function getNodeModuleDir(moduleName: string) {
             return { nodeModulesDir, moduleDir, packageJsonPath };
         } catch (e) {
             if (process.env.debug) {
-                console.error(e);
+                logger.error(e);
             }
         }
         const prevDir = dir;
@@ -105,7 +90,7 @@ function writeDts(typesLocalModuleDirPath: string, result: string) {
 function updateTsConfigJson(callback: (paths: any) => any) {
     const path = "tsconfig.json";
     if (!fs.existsSync(path)) {
-        warn("tsconfig.json does not exist.");
+        logger.warn("tsconfig.json does not exist.");
         return;
     }
     const jsonContent = fs.readFileSync(path).toString();
