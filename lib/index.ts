@@ -90,12 +90,12 @@ function writeDts(typesLocalModuleDirPath: string, result: string) {
 }
 
 function updateTsConfigJson(callback: (paths: any) => any) {
-    const path = "tsconfig.json";
-    if (!fs.existsSync(path)) {
+    const tsConfigPath = "tsconfig.json";
+    if (!fs.existsSync(tsConfigPath)) {
         logger.warn("tsconfig.json does not exist.");
         return;
     }
-    const jsonContent = fs.readFileSync(path).toString();
+    const jsonContent = fs.readFileSync(tsConfigPath).toString();
     const indentAmount = detectIndent(jsonContent).amount || 4;
     const tsConfig = JSON.parse(jsonContent);
     const compilerOptions = tsConfig.compilerOptions = tsConfig.compilerOptions || {};
@@ -107,7 +107,7 @@ function updateTsConfigJson(callback: (paths: any) => any) {
         delete compilerOptions.paths;
     }
     sortKeys(tsConfig, { deep: true });
-    fs.writeFileSync(path, JSON.stringify(tsConfig, null, indentAmount));
+    fs.writeFileSync(tsConfigPath, JSON.stringify(tsConfig, null, indentAmount));
 }
 
 function addModuleToTsConfigJson(moduleName: string, typesLocalDirName: string) {
