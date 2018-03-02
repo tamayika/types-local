@@ -1,0 +1,32 @@
+workflows:
+  version: 2
+  main:
+    jobs:
+      - node6
+      - node8
+      - node9
+
+base: &base
+  environment:
+    TZ: "/usr/share/zoneinfo/Asia/Tokyo"
+  steps:
+    - checkout
+    - run: |
+        npm install
+        npm run lint
+        npm test
+
+version: 2
+jobs:
+  node6:
+    docker:
+      - image: circleci/node:6
+    <<: *base
+  node8:
+    docker:
+      - image: circleci/node:8
+    <<: *base
+  node9:
+    docker:
+      - image: circleci/node:9
+    <<: *base
