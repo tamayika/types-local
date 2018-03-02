@@ -4,9 +4,9 @@ base: &base
   steps:
     - checkout
     - run: |
-      npm install
-      npm run lint
-      npm test
+        npm install
+        npm run lint
+        npm test
 
 version: 2
 jobs:
