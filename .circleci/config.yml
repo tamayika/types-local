@@ -1,3 +1,11 @@
+workflows:
+  version: 2
+  main:
+    jobs:
+      - node6
+      - node8
+      - node9
+
 base: &base
   environment:
     TZ: "/usr/share/zoneinfo/Asia/Tokyo"
